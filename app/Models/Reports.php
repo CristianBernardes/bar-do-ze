@@ -17,6 +17,30 @@ class Reports extends Model
     /**
      * @return mixed
      */
+    public static function salesOfTheDay(): mixed
+    {
+        return self::querySalesMonthDay([date('Y-m-d')], 'sales_of_the_day');
+    }
+
+    /**
+     * @return mixed
+     */
+    public static function salesOfTheMonth(): mixed
+    {
+        return self::querySalesMonthDay(self::daysOfTheMonth(), 'sales_of_the_month');
+    }
+
+    /**
+     * @return float
+     */
+    public static function averageSaleInTheMonth(): float
+    {
+        return round(self::salesOfTheMonth()->sales_of_the_month / sizeof(self::daysOfTheMonth()), 2);
+    }
+
+    /**
+     * @return mixed
+     */
     public static function topSellingProducts(): mixed
     {
         return self::querySellingProducts()
@@ -34,17 +58,6 @@ class Reports extends Model
             ->orderBy('amount', 'ASC')
             ->orderBy('products.name', 'asc')
             ->get();
-    }
-
-    /**
-     * @return mixed
-     */
-    public static function averageSale(): mixed
-    {
-        return ProductSale::select(DB::raw('ROUND(AVG(product_sales.price * product_sales.amount), 2) AS average_sale'))
-            ->join('sales', 'product_sales.sale_id', 'sales.id')
-            ->whereIn('sales.date', self::daysOfTheMonth())
-            ->first();
     }
 
     /**
@@ -94,6 +107,17 @@ class Reports extends Model
             ->rightJoin('products', 'product_sales.product_id', 'products.id')
             ->groupBy('products.name')
             ->take(5);
+    }
+
+    /**
+     * @param $dates
+     * @param $aliases
+     * @return mixed
+     */
+    protected static function querySalesMonthDay($dates, $aliases): mixed
+    {
+        return ProductSale::select(DB::raw("ROUND(SUM(product_sales.price * product_sales.amount), 2) AS $aliases"))
+            ->join('sales', 'product_sales.sale_id', 'sales.id')->whereIn('sales.date', $dates)->first();
     }
 
     /**

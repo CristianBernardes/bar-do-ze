@@ -26,32 +26,15 @@ class ReportsController extends Controller
     /**
      * @return JsonResponse
      */
-    public function topSellingProducts(): JsonResponse
+    public function index(): JsonResponse
     {
-        return response()->json($this->reportService->topSellingProducts());
-    }
-
-    /**
-     * @return JsonResponse
-     */
-    public function leastSoldProducts(): JsonResponse
-    {
-        return response()->json($this->reportService->leastSoldProducts());
-    }
-
-    /**
-     * @return JsonResponse
-     */
-    public function averageSale(): JsonResponse
-    {
-        return response()->json($this->reportService->averageSale());
-    }
-
-    /**
-     * @return JsonResponse
-     */
-    public function sumOfDaySales(): JsonResponse
-    {
-        return response()->json($this->reportService->sumOfDaySales());
+        return response()->json([
+            'sales_of_the_day' => $this->reportService->salesOfTheDay()->sales_of_the_day ?? 0,
+            'sales_of_the_month' => $this->reportService->salesOfTheMonth()->sales_of_the_month ?? 0,
+            'average_sale_in_the_month' => $this->reportService->averageSaleInTheMonth(),
+            'top_selling_products' => $this->reportService->topSellingProducts(),
+            'least_sold_products' => $this->reportService->leastSoldProducts(),
+            'sum_of_day_sales' => $this->reportService->sumOfDaySales()
+        ]);
     }
 }

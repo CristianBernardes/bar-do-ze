@@ -25,6 +25,30 @@ class ReportService
     /**
      * @return mixed
      */
+    public function salesOfTheDay(): mixed
+    {
+        return $this->reportRepository->salesOfTheDay();
+    }
+
+    /**
+     * @return mixed
+     */
+    public function salesOfTheMonth(): mixed
+    {
+        return $this->reportRepository->salesOfTheMonth();
+    }
+
+    /**
+     * @return mixed
+     */
+    public function averageSaleInTheMonth(): mixed
+    {
+        return $this->reportRepository->averageSaleInTheMonth();
+    }
+
+    /**
+     * @return mixed
+     */
     public function topSellingProducts(): mixed
     {
         return $this->reportRepository->topSellingProducts();
@@ -36,14 +60,6 @@ class ReportService
     public function leastSoldProducts(): mixed
     {
         return $this->reportRepository->leastSoldProducts();
-    }
-
-    /**
-     * @return mixed
-     */
-    public function averageSale(): mixed
-    {
-        return $this->reportRepository->averageSale();
     }
 
     /**

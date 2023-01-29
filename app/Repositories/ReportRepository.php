@@ -20,6 +20,30 @@ class ReportRepository
     /**
      * @return mixed
      */
+    public function salesOfTheDay(): mixed
+    {
+        return $this->model()::salesOfTheDay();
+    }
+
+    /**
+     * @return mixed
+     */
+    public function salesOfTheMonth(): mixed
+    {
+        return $this->model()::salesOfTheMonth();
+    }
+
+    /**
+     * @return mixed
+     */
+    public function averageSaleInTheMonth(): mixed
+    {
+        return $this->model()::averageSaleInTheMonth();
+    }
+
+    /**
+     * @return mixed
+     */
     public function topSellingProducts(): mixed
     {
         return $this->model()::topSellingProducts();
@@ -31,14 +55,6 @@ class ReportRepository
     public function leastSoldProducts(): mixed
     {
         return $this->model()::leastSoldProducts();
-    }
-
-    /**
-     * @return mixed
-     */
-    public function averageSale(): mixed
-    {
-        return $this->model()::averageSale();
     }
 
     /**
