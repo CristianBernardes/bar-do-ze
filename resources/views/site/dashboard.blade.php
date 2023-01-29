@@ -75,7 +75,7 @@
             <div class="col-sm-12 col-xl-12">
                 <div class="bg-secondary rounded h-100 p-4">
                     <h6 class="mb-4">Evolução das vendas do mês de {{ monthFullName(date('m')) }}</h6>
-                    <canvas height="75" id="bar-chart"></canvas>
+                    <canvas height="60" id="bar-chart"></canvas>
                 </div>
             </div>
         </div>
