@@ -65,9 +65,10 @@ class Reports extends Model
      */
     public static function sumOfDaySales(): array
     {
-        $dates = [];
+        $labels = self::daysOfTheMonth();
+        $values = [];
 
-        foreach (self::daysOfTheMonth() as $day) {
+        foreach ($labels as $day) {
 
             $query = ProductSale::select('sales.date', DB::raw('ROUND(SUM(product_sales.price  * product_sales.amount), 2) AS sum_of_sales'))
                 ->join('sales', 'product_sales.sale_id', 'sales.id')
@@ -77,20 +78,19 @@ class Reports extends Model
 
             if ($query) {
 
-                $dates[] = [
-                    'date' => $query->date,
-                    'sum_of_sales' => $query->sum_of_sales
-                ];
+                $values[] = $query->sum_of_sales;
             } else {
 
-                $dates[] = [
-                    'date' => $day,
-                    'sum_of_sales' => 0
-                ];
+                $values[] = 0;
             }
         }
 
-        return $dates;
+        return [
+            'labels' => array_map(function ($date) {
+                return "dia " . formatDateAndTime($date, 'd');
+            }, $labels),
+            'values' => $values
+        ];
     }
 
     /**

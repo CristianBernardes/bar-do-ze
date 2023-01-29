@@ -8,10 +8,6 @@ use App\Http\Controllers\{
 
 use Illuminate\Support\Facades\Route;
 
-Route::get('/', function () {
-    return view('welcome');
-});
-
+Route::get('/', [ReportsController::class, 'index']);
 Route::resource('product', ProductController::class)->except('create', 'edit');
 Route::resource('sale', SaleController::class)->except('create', 'edit');
-Route::get('reports', [ReportsController::class, 'index']);

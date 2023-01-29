@@ -2,8 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Helpers\NumericFormatting;
 use App\Services\ReportService;
-use Illuminate\Http\JsonResponse;
+use Illuminate\Contracts\Foundation\Application;
+use Illuminate\Contracts\View\Factory;
+use Illuminate\Contracts\View\View;
 
 /**
  *
@@ -24,17 +27,27 @@ class ReportsController extends Controller
     }
 
     /**
-     * @return JsonResponse
+     * @return Application|Factory|View
      */
-    public function index(): JsonResponse
+    public function index(): View|Factory|Application
     {
-        return response()->json([
-            'sales_of_the_day' => $this->reportService->salesOfTheDay()->sales_of_the_day ?? 0,
-            'sales_of_the_month' => $this->reportService->salesOfTheMonth()->sales_of_the_month ?? 0,
-            'average_sale_in_the_month' => $this->reportService->averageSaleInTheMonth(),
-            'top_selling_products' => $this->reportService->topSellingProducts(),
-            'least_sold_products' => $this->reportService->leastSoldProducts(),
-            'sum_of_day_sales' => $this->reportService->sumOfDaySales()
-        ]);
+        $salesOfTheDay = NumericFormatting::formatBraziliancurrency($this->reportService->salesOfTheDay()->sales_of_the_day ?? 0);
+        $salesOfTheMonth = NumericFormatting::formatBraziliancurrency($this->reportService->salesOfTheMonth()->sales_of_the_month ?? 0);
+        $averageSaleInTheMonth = NumericFormatting::formatBraziliancurrency($this->reportService->averageSaleInTheMonth());
+        $topSellingProducts = $this->reportService->topSellingProducts();
+        $leastSoldProducts = $this->reportService->leastSoldProducts();
+        $sumOfDaySales = $this->reportService->sumOfDaySales();
+
+        return view(
+            'site.dashboard',
+            compact(
+                'salesOfTheDay',
+                'salesOfTheMonth',
+                'averageSaleInTheMonth',
+                'topSellingProducts',
+                'leastSoldProducts',
+                'sumOfDaySales'
+            )
+        );
     }
 }
