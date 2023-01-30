@@ -12,5 +12,7 @@
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 
     <!-- Template Javascript -->
+    <script src="{{ url('assets/js/helpers.js') }}"></script>
     <script src="{{ url('assets/js/main.js') }}"></script>
-    {{-- <script src="{{ url('assets/js/resources.js') }}"></script> --}}
+    <script src="{{ url('assets/js/resources.js') }}"></script>
+    @stack('custom-scripts')

@@ -43,27 +43,28 @@
     Chart.defaults.borderColor = "#000000";
 
     // Single Bar Chart
-    var ctx4 = $("#bar-chart").get(0).getContext("2d");
-    var myChart4 = new Chart(ctx4, {
-        type: "bar",
-        data: {
-            labels: sumOfDaySales.labels,
-            datasets: [{
-                label: 'Evolução',
-                backgroundColor: [
-                    "rgba(235, 22, 22, .7)",
-                    "rgba(235, 22, 22, .6)",
-                    "rgba(235, 22, 22, .5)",
-                    "rgba(235, 22, 22, .4)",
-                    "rgba(235, 22, 22, .3)"
-                ],
-                data: sumOfDaySales.values
-            }]
-        },
-        options: {
-            responsive: true,
-        }
-    });
-
+    if (typeof $("#bar-chart").get(0) !== 'undefined') {
+        var ctx4 = $("#bar-chart").get(0).getContext("2d");
+        var myChart4 = new Chart(ctx4, {
+            type: "bar",
+            data: {
+                labels: sumOfDaySales.labels,
+                datasets: [{
+                    label: 'Evolução',
+                    backgroundColor: [
+                        "rgba(235, 22, 22, .7)",
+                        "rgba(235, 22, 22, .6)",
+                        "rgba(235, 22, 22, .5)",
+                        "rgba(235, 22, 22, .4)",
+                        "rgba(235, 22, 22, .3)"
+                    ],
+                    data: sumOfDaySales.values
+                }]
+            },
+            options: {
+                responsive: true,
+            }
+        });
+    }
 })(jQuery);
 
