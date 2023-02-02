@@ -61,34 +61,36 @@ class Reports extends Model
     }
 
     /**
-     * @return array
+     * Esta função calcula a soma das vendas realizadas a cada dia de um mês e retorna um array com rótulos
+     * e valores.
+     *
+     * @return array Uma matriz com rótulos e valores da soma das vendas por dia
      */
     public static function sumOfDaySales(): array
     {
-        $labels = self::daysOfTheMonth();
-        $values = [];
+        // Obter todas as datas do mês atual
+        $dates = self::daysOfTheMonth();
 
-        foreach ($labels as $day) {
+        // Retorna somente o dia de cada data. Exemplo: 2023-01-10 retorna 10
+        $labels = array_map(function ($date) {
+            return "day " . Carbon::createFromFormat('Y-m-d', $date)->format('d');
+        }, $dates);
 
-            $query = ProductSale::select('sales.date', DB::raw('ROUND(SUM(product_sales.price  * product_sales.amount), 2) AS sum_of_sales'))
+        // Traz os valores de vendas por dia de cada mês
+        $values = array_map(function ($date) {
+
+            $sumOfSales = ProductSale::select(DB::raw('ROUND(SUM(product_sales.price  * product_sales.amount), 2) AS sum_of_sales'))
                 ->join('sales', 'product_sales.sale_id', 'sales.id')
-                ->where('sales.date', $day)
+                ->whereDate('sales.date', $date)
                 ->groupBy('sales.date')
-                ->first();
+                ->value('sum_of_sales');
 
-            if ($query) {
+            return $sumOfSales ?? 0;
+        }, $dates);
 
-                $values[] = $query->sum_of_sales;
-            } else {
-
-                $values[] = 0;
-            }
-        }
-
+        // Retorne o array final com rótulos e valores
         return [
-            'labels' => array_map(function ($date) {
-                return "dia " . formatDateAndTime($date, 'd');
-            }, $labels),
+            'labels' => $labels,
             'values' => $values
         ];
     }

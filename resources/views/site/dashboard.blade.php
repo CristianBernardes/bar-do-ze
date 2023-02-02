@@ -37,7 +37,7 @@
             <div class="col-sm-12 col-md-6 col-xl-6">
                 <div class="h-100 bg-secondary rounded p-4">
                     <div class="d-flex align-items-center justify-content-between mb-2">
-                        <h6 class="mb-0">Produtos mais vendidos</h6>
+                        <h6 class="mb-0">Top Produtos mais vendidos</h6>
                     </div>
                     @foreach ($topSellingProducts as $topSellingProduct)
                         <div class="d-flex align-items-center border-bottom py-3">
@@ -54,7 +54,7 @@
             <div class="col-sm-12 col-md-6 col-xl-6">
                 <div class="h-100 bg-secondary rounded p-4">
                     <div class="d-flex align-items-center justify-content-between mb-2">
-                        <h6 class="mb-0">Produtos menos vendidos</h6>
+                        <h6 class="mb-0">Top Produtos menos vendidos</h6>
                     </div>
                     @foreach ($leastSoldProducts as $leastSoldProduct)
                         <div class="d-flex align-items-center border-bottom py-3">
