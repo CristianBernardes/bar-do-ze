@@ -74,7 +74,7 @@ class Reports extends Model
 
         // Retorna somente o dia de cada data. Exemplo: 2023-01-10 retorna 10
         $labels = Arr::map($dates, function ($date) {
-            return "day " . Carbon::createFromFormat('Y-m-d', $date)->format('d');
+            return "dia " . Carbon::createFromFormat('Y-m-d', $date)->format('d');
         });
 
         // Traz os valores de vendas por dia de cada mês
@@ -102,10 +102,10 @@ class Reports extends Model
     protected static function querySellingProducts(): mixed
     {
         return ProductSale::select(
-            'products.name AS products_name',
             DB::raw(
                 'CONVERT(COALESCE(SUM(product_sales.amount), 0), SIGNED) AS amount'
-            )
+            ),
+            'products.name AS products_name'
         )
             ->rightJoin('products', 'product_sales.product_id', 'products.id')
             ->groupBy('products.name')
@@ -124,20 +124,22 @@ class Reports extends Model
     }
 
     /**
+     * Obtém todos os dias do mês atual
+     *
      * @return array
      */
     protected static function daysOfTheMonth(): array
     {
+        // Obtém a data atual
         $date = Carbon::now();
-        $daysInMonth = $date->daysInMonth;
 
-        $days = [];
+        // Cria um array com os dias do mês atual
+        $days = range(1, $date->daysInMonth);
 
-        for ($i = 1; $i <= $daysInMonth; $i++) {
-            $day = Carbon::createFromDate($date->year, $date->month, $i);
-            $days[] = $day->format('Y-m-d');
-        }
+        // Mapeia os dias do mês para formatar a data como Y-m-d
+        return Arr::map($days, function ($day) use ($date) {
 
-        return $days;
+            return Carbon::createFromDate($date->year, $date->month, $day)->format('Y-m-d');
+        });
     }
 }
