@@ -5,6 +5,7 @@ namespace App\Models;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\DB;
 
 /**
@@ -72,12 +73,12 @@ class Reports extends Model
         $dates = self::daysOfTheMonth();
 
         // Retorna somente o dia de cada data. Exemplo: 2023-01-10 retorna 10
-        $labels = array_map(function ($date) {
+        $labels = Arr::map($dates, function ($date) {
             return "day " . Carbon::createFromFormat('Y-m-d', $date)->format('d');
-        }, $dates);
+        });
 
         // Traz os valores de vendas por dia de cada mês
-        $values = array_map(function ($date) {
+        $values = Arr::map($dates, function ($date) {
 
             $sumOfSales = ProductSale::select(DB::raw('ROUND(SUM(product_sales.price  * product_sales.amount), 2) AS sum_of_sales'))
                 ->join('sales', 'product_sales.sale_id', 'sales.id')
@@ -86,7 +87,7 @@ class Reports extends Model
                 ->value('sum_of_sales');
 
             return $sumOfSales ?? 0;
-        }, $dates);
+        });
 
         // Retorne o array final com rótulos e valores
         return [
