@@ -133,11 +133,8 @@ class Reports extends Model
         // Obtém a data atual
         $date = Carbon::now();
 
-        // Cria um array com os dias do mês atual
-        $days = range(1, $date->daysInMonth);
-
         // Mapeia os dias do mês para formatar a data como Y-m-d
-        return Arr::map($days, function ($day) use ($date) {
+        return Arr::map(range(1, $date->daysInMonth), function ($day) use ($date) {
 
             return Carbon::createFromDate($date->year, $date->month, $day)->format('Y-m-d');
         });
