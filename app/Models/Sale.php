@@ -26,12 +26,28 @@ class Sale extends Model
      *
      * @var array
      */
-    protected $appends = ['sale_items'];
+    protected $appends = ['total_sale', 'sale_items'];
 
-    /**
-     * @return string|null
-     */
     public function getSaleItemsAttribute()
+    {
+        return $this->querySales($this->id)->get();
+    }
+
+    public function getTotalSaleAttribute()
+    {
+        $subquerySql = $this->querySales($this->id)->toSql();
+
+        return DB::table(DB::raw("($subquerySql) as subquery"))
+            ->mergeBindings($this->querySales($this->id)->getQuery())
+            ->sum("subquery.sale_value");
+    }
+
+    public static function querySaleMonth(int $month = null)
+    {
+        return self::whereIn('date', $month ?? daysOfTheMonth())->orderBy('id', 'DESC')->get();
+    }
+
+    public function querySales($id)
     {
         return ProductSale::select(
             'products.name',
@@ -40,7 +56,6 @@ class Sale extends Model
             DB::raw('(product_sales.price * product_sales.amount) AS sale_value')
         )
             ->join('products', 'products.id', 'product_sales.product_id')
-            ->where('product_sales.sale_id', $this->id)
-            ->get();
+            ->where('product_sales.sale_id', $id);
     }
 }

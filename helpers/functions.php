@@ -56,3 +56,28 @@ function formatDateAndTime($date, $format = 'd/m/Y')
 {
     return \Carbon\Carbon::parse($date)->format($format);
 }
+
+/**
+ * Obtém todos os dias de um determinado mês
+ *
+ * @param int|null $month
+ * @param int|null $year
+ * @return array
+ */
+function daysOfTheMonth(int $month = null, int $year = null): array
+{
+    // Obtém a data atual
+    $date = \Carbon\Carbon::now();
+
+    // Se não for passado um mês, usa o mês atual
+    $month = $month ?? $date->month;
+
+    // Se não for passado um ano, usa o ano atual
+    $year = $year ??  $date->year;
+
+    // Mapeia os dias do mês para formatar a data como Y-m-d
+    return \Illuminate\Support\Arr::map(range(1, \Carbon\Carbon::createFromDate($year, $month, 1)->daysInMonth), function ($day) use ($year, $month) {
+
+        return \Carbon\Carbon::createFromDate($year, $month, $day)->format('Y-m-d');
+    });
+}

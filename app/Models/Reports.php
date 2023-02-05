@@ -28,7 +28,7 @@ class Reports extends Model
      */
     public static function salesOfTheMonth(): mixed
     {
-        return self::querySalesMonthDay(self::daysOfTheMonth(), 'sales_of_the_month');
+        return self::querySalesMonthDay(daysOfTheMonth(), 'sales_of_the_month');
     }
 
     /**
@@ -36,7 +36,7 @@ class Reports extends Model
      */
     public static function averageSaleInTheMonth(): float
     {
-        return round(self::salesOfTheMonth()->sales_of_the_month / sizeof(self::daysOfTheMonth()), 2);
+        return round(self::salesOfTheMonth()->sales_of_the_month / sizeof(daysOfTheMonth()), 2);
     }
 
     /**
@@ -70,7 +70,7 @@ class Reports extends Model
     public static function sumOfDaySales(): array
     {
         // Obter todas as datas do mês atual
-        $dates = self::daysOfTheMonth();
+        $dates = daysOfTheMonth();
 
         // Retorna somente o dia de cada data. Exemplo: 2023-01-10 retorna 10
         $labels = Arr::map($dates, function ($date) {
@@ -121,22 +121,5 @@ class Reports extends Model
     {
         return ProductSale::select(DB::raw("ROUND(SUM(product_sales.price * product_sales.amount), 2) AS $aliases"))
             ->join('sales', 'product_sales.sale_id', 'sales.id')->whereIn('sales.date', $dates)->first();
-    }
-
-    /**
-     * Obtém todos os dias do mês atual
-     *
-     * @return array
-     */
-    protected static function daysOfTheMonth(): array
-    {
-        // Obtém a data atual
-        $date = Carbon::now();
-
-        // Mapeia os dias do mês para formatar a data como Y-m-d
-        return Arr::map(range(1, $date->daysInMonth), function ($day) use ($date) {
-
-            return Carbon::createFromDate($date->year, $date->month, $day)->format('Y-m-d');
-        });
     }
 }

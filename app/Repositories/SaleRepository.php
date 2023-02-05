@@ -20,6 +20,14 @@ class SaleRepository extends AbstractRepository
     }
 
     /**
+     * @return mixed
+     */
+    public function index($month = null): mixed
+    {
+        return $this->model()::querySaleMonth();
+    }
+
+    /**
      * @param array $data
      * @return mixed
      */
